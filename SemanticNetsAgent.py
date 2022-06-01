@@ -12,8 +12,7 @@ class SemanticNetsAgent:
 
 
     def solve(self, initial_sheep, initial_wolves):
-            global const BOAT_LEFT = 0
-            global const BOAT_RIGHT = 1
+        
         class State(object):
             def __init__(self, left_sheep, left_wolf, right_sheep, right_wolf, boat):
                 self.left_sheep=left_sheep
@@ -25,9 +24,9 @@ class SemanticNetsAgent:
 
 
             def check_position(self):
-                if (self.left_sheep < 0 or self.left_wolf < 0 or self.right_sheep < 0 or self.right_wolf < 0)
+                if (self.left_sheep < 0 or self.left_wolf < 0 or self.right_sheep < 0 or self.right_wolf < 0):
                     return False 
-                elif (self.left_sheep !=0 and self.left_wolf > left_sheep):
+                elif (self.left_sheep !=0 and self.left_wolf > self.left_sheep):
                     return False
                 elif (self.right_sheep !=0 and self.right_sheep < self.right_wolf):
                     return False
@@ -36,7 +35,7 @@ class SemanticNetsAgent:
 
                 
             def isGoalState(self):
-                    if self.left_sheep == 0 and self.left_wolf == 0 and self.boat == BOAT_RIGHT:
+                    if self.left_sheep == 0 and self.left_wolf == 0 and self.boat == "right":
                         return True
                     else:
                         return False  
@@ -44,23 +43,23 @@ class SemanticNetsAgent:
         def findKids(currNode):
             children = []
             movesarray = [(2,0),(0,2),(1,1),(0,1),(1,0)]
-            if currNode.boat == BOAT_LEFT:
+            if currNode.boat == "left":
                 for moves in movesarray:
-                    newState = State(currNode.left_sheep - moves[0], currNode.left_wolf - moves[1], currNode.right_sheep + moves[0], currNode.right_wolf + moves [1], BOAT_RIGHT )
+                    newState = State(currNode.left_sheep - moves[0], currNode.left_wolf - moves[1], currNode.right_sheep + moves[0], currNode.right_wolf + moves [1], "right")
                     if newState.check_position():
                         children.append(newState)
                         newState.parent = currNode
             else:
                 for moves in movesarray:
-                     newState = State(currNode.left_sheep + moves[0], currNode.left_wolf + moves[1], currNode.right_sheep - moves[0], currNode.right_wolf - moves [1], BOAT_LEFT )
-                    if newState.check_position():
+                     newState = State(currNode.left_sheep + moves[0], currNode.left_wolf + moves[1], currNode.right_sheep - moves[0], currNode.right_wolf - moves [1], "left" )
+                     if newState.check_position():
                         children.append(newState)
                         newState.parent = currNode
             return children
 
 
         goal_state = False
-        root = State(initial_sheep, initial_wolf, 0, 0, BOAT_LEFT)
+        root = State(initial_sheep, initial_wolves, 0, 0, "left")
         open_states = deque([])
         open_states.append(root)
         closed_states = []
@@ -79,7 +78,7 @@ class SemanticNetsAgent:
             all_moves = []
             order_moves = []
             while currState.parent:
-                move = (abs(currState.left_sheep-currState.parent.leftsheep), abs(currState.left_wolf=currState.parent.left_wolf))
+                move = (abs(currState.left_sheep-currState.parent.leftsheep), abs(currState.left_wolf-currState.parent.left_wolf))
                 all_moves.append(move)
                 currState=currState.parent
             for i in range(len(all_moves)):
